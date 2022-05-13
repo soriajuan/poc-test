@@ -1,0 +1,4 @@
+rootProject.name = 'poc-test'
+include 'application'
+include 'data'
+include 'domain'

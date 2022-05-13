@@ -1,0 +1,158 @@
+package poc.test.rest.person;
+
+import org.approvaltests.Approvals;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import poc.test.domain.EntityNotFoundException;
+import poc.test.domain.Person;
+import poc.test.domain.usecase.CreatePersonUseCase;
+import poc.test.domain.usecase.ReadPersonUseCase;
+
+import java.nio.file.Files;
+import java.util.List;
+import java.util.UUID;
+
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(PersonCrudController.class)
+class PersonCrudControllerTest {
+
+    static final String BASE_URI = "/persons";
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @MockBean
+    PersonCrudRestMapper mapper;
+
+    @MockBean
+    CreatePersonUseCase createUseCase;
+
+    @MockBean
+    ReadPersonUseCase readUseCase;
+
+    @Test
+    void create() throws Exception {
+        when(mapper.toPerson(any(PersonCreateRequestPayload.class)))
+                .thenAnswer(invocation -> {
+                    var arg = invocation.getArgument(0, PersonCreateRequestPayload.class);
+                    return Person.builder()
+                            .firstName(arg.getFirstName())
+                            .lastName(arg.getLastName())
+                            .build();
+                });
+
+        var uuid = UUID.randomUUID();
+        when(createUseCase.create(any(Person.class)))
+                .thenReturn(Person.builder().id(uuid).build());
+
+        var resourceFilePath = new ClassPathResource("person-crud-controller-test/createRequestPayload.json", this.getClass().getClassLoader())
+                .getFile().toPath();
+        var requestPayload = Files.readString(resourceFilePath);
+
+        mockMvc.perform(post(BASE_URI)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestPayload))
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, "/persons/" + uuid))
+                .andReturn();
+
+        verify(mapper).toPerson(any(PersonCreateRequestPayload.class));
+        verify(createUseCase).create(any(Person.class));
+        verifyNoMoreInteractions(mapper, createUseCase);
+    }
+
+    @Test
+    void readAll() throws Exception {
+        when(readUseCase.readAll())
+                .thenReturn(List.of(Person.builder()
+                        .id(UUID.fromString("1b80ae86-1522-48ec-ae26-7197f07fb869"))
+                        .firstName("John")
+                        .lastName("Doe")
+                        .build()));
+
+        when(mapper.toPersonReadResponsePayload(any(Person.class)))
+                .thenAnswer(invocation -> {
+                    var arg = invocation.getArgument(0, Person.class);
+                    var res = new PersonReadResponsePayload();
+                    res.setId(arg.getId());
+                    res.setFirstName(arg.getFirstName());
+                    res.setLastName(arg.getLastName());
+                    return res;
+                });
+
+        var responseBody = mockMvc.perform(get(BASE_URI))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Approvals.verify(responseBody);
+
+        verify(readUseCase).readAll();
+        verify(mapper).toPersonReadResponsePayload(any(Person.class));
+        verifyNoMoreInteractions(readUseCase, mapper);
+    }
+
+    @Test
+    void readById_notFound() throws Exception {
+        when(readUseCase.readById(any(UUID.class)))
+                .thenThrow(new EntityNotFoundException("entity person not found under id " + returnsFirstArg()));
+
+        mockMvc.perform(get(BASE_URI + "/{id}", UUID.randomUUID()))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        verify(readUseCase).readById(any(UUID.class));
+        verifyNoInteractions(mapper);
+    }
+
+    @Test
+    void readById() throws Exception {
+        when(readUseCase.readById(any(UUID.class)))
+                .thenReturn(Person.builder()
+                        .id(UUID.fromString("1b80ae86-1522-48ec-ae26-7197f07fb869"))
+                        .firstName("John")
+                        .lastName("Doe")
+                        .build());
+
+        when(mapper.toPersonReadResponsePayload(any(Person.class)))
+                .thenAnswer(invocation -> {
+                    var arg = invocation.getArgument(0, Person.class);
+                    var res = new PersonReadResponsePayload();
+                    res.setId(arg.getId());
+                    res.setFirstName(arg.getFirstName());
+                    res.setLastName(arg.getLastName());
+                    return res;
+                });
+
+        var responseBody = mockMvc.perform(get(BASE_URI + "/{id}", UUID.randomUUID()))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Approvals.verify(responseBody);
+
+        verify(readUseCase).readById(any(UUID.class));
+        verify(mapper).toPersonReadResponsePayload(any(Person.class));
+    }
+
+}
