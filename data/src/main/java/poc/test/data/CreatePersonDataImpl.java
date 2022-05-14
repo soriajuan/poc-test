@@ -2,16 +2,12 @@ package poc.test.data;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import poc.test.domain.CreatePersonData;
 import poc.test.domain.Person;
-import poc.test.domain.PersonData;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-class CreatePersonDataImpl implements PersonData {
+class CreatePersonDataImpl implements CreatePersonData {
 
     private final PersonDataMapper mapper;
     private final PersonJpaRepository jpaRepository;
@@ -21,16 +17,6 @@ class CreatePersonDataImpl implements PersonData {
         var toInsert = mapper.toPersonPsql(p);
         var inserted = jpaRepository.save(toInsert);
         return mapper.toPerson(inserted);
-    }
-
-    @Override
-    public Person findById(UUID ui) {
-        return null;
-    }
-
-    @Override
-    public List<Person> findAll() {
-        return Collections.emptyList();
     }
 
 }

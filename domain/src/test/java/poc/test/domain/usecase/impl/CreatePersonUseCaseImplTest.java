@@ -7,8 +7,8 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import poc.test.domain.CreatePersonData;
 import poc.test.domain.Person;
-import poc.test.domain.PersonData;
 
 import java.util.UUID;
 
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 class CreatePersonUseCaseImplTest {
 
     @Mock
-    PersonData data;
+    CreatePersonData data;
 
     @InjectMocks
     CreatePersonUseCaseImpl service;

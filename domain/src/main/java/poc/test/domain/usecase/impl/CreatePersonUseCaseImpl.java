@@ -3,8 +3,8 @@ package poc.test.domain.usecase.impl;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import poc.test.domain.CreatePersonData;
 import poc.test.domain.Person;
-import poc.test.domain.PersonData;
 import poc.test.domain.usecase.CreatePersonUseCase;
 
 import java.util.Objects;
@@ -13,7 +13,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 class CreatePersonUseCaseImpl implements CreatePersonUseCase {
 
-    private final PersonData personData;
+    private final CreatePersonData createPersonData;
 
     @Override
     public Person create(Person p) {
@@ -26,7 +26,7 @@ class CreatePersonUseCaseImpl implements CreatePersonUseCase {
         if (StringUtils.isBlank(p.getLastName())) {
             throw new IllegalArgumentException("last name cannot be blank");
         }
-        return personData.insert(p);
+        return createPersonData.insert(p);
     }
 
 }

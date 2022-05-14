@@ -3,8 +3,7 @@ package poc.test.domain;
 import java.util.List;
 import java.util.UUID;
 
-public interface PersonData {
-    Person insert(Person p);
-    Person findById(UUID ui);
+public interface ReadPersonData {
+    Person findById(UUID id);
     List<Person> findAll();
 }

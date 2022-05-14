@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import poc.test.domain.EntityNotFoundException;
 import poc.test.domain.Person;
-import poc.test.domain.PersonData;
+import poc.test.domain.ReadPersonData;
 
 import java.util.Collections;
 import java.util.UUID;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 class ReadPersonUseCaseImplTest {
 
     @Mock
-    PersonData data;
+    ReadPersonData data;
 
     @InjectMocks
     ReadPersonUseCaseImpl service;
