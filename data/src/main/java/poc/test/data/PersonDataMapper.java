@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import poc.test.domain.Person;
 
 @Mapper(componentModel = "spring")
-public interface PersonDataMapper {
+interface PersonDataMapper {
     PersonPsql toPersonPsql(Person p);
 
     @InheritInverseConfiguration

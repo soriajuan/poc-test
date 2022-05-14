@@ -1,8 +1,8 @@
 plugins {
     id 'buildsrc.public-repositories'
     id 'buildsrc.java'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'org.springframework.boot' version '2.6.7'
+    id 'buildsrc.spring-dependency-management'
+    id 'org.springframework.boot'
 }
 
 group = 'poc-test'
@@ -10,6 +10,7 @@ version = '1.0.0-SNAPSHOT'
 
 dependencies {
     implementation project(':domain')
+    implementation project(':data')
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
