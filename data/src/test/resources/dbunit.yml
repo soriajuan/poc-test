@@ -1,0 +1,5 @@
+alwaysCleanBefore: true
+alwaysCleanAfter: true
+caseInsensitiveStrategy: LOWERCASE
+properties:
+  schema: "poc"

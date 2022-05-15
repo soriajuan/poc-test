@@ -1,0 +1,4 @@
+person:
+  - id: "this-value-should-be-ignored-for-assertion"
+    first_name: "John"
+    last_name: "Doe"

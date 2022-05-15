@@ -1,0 +1,7 @@
+person:
+  - id: "5dcdabc5-6d31-4281-8953-14b2ca3aac6b"
+    first_name: "John"
+    last_name: "Doe"
+  - id: "4df83252-0f39-418c-a1b6-5c18ff62c346"
+    first_name: "Jane"
+    last_name: "Doe"

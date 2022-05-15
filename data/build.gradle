@@ -21,6 +21,8 @@ dependencies {
     testImplementation 'org.testcontainers:postgresql:1.16.3'
     testImplementation 'org.testcontainers:junit-jupiter:1.16.3'
     testImplementation 'com.github.database-rider:rider-spring:1.32.0'
+    testImplementation 'org.liquibase:liquibase-core'
+    testImplementation 'org.liquibase:liquibase-groovy-dsl:3.0.2'
 }
 
 test {
