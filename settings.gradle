@@ -1,5 +1,6 @@
 rootProject.name = 'poc-test'
 include 'application'
+include 'cache'
 include 'data'
 include 'domain'
 include 'migrate'
