@@ -7,6 +7,7 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.boot.test.context.SpringBootTest;
+import poc.test.cache.config.RedisITExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
