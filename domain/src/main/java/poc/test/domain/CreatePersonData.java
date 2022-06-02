@@ -1,5 +1,7 @@
 package poc.test.domain;
 
+import org.springframework.lang.NonNull;
+
 public interface CreatePersonData {
-    Person insert(Person p);
+    Person insert(@NonNull Person p);
 }
