@@ -15,7 +15,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,14 +27,14 @@ class PersonCrudController {
 
     @PostMapping
     ResponseEntity<Void> create(@RequestBody @Valid PersonCreateRequestPayload payload) {
-        var toCreate = mapper.toPerson(payload);
+        var toCreate = mapper.toPersonToCreate(payload);
         var created = createUseCase.create(toCreate);
-        return ResponseEntity.created(URI.create("/persons/" + created.getId())).build();
+        return ResponseEntity.created(URI.create("/persons/" + created.id())).build();
     }
 
     @GetMapping
     List<PersonReadResponsePayload> readAll() {
-        return readUseCase.readAll().stream().map(mapper::toPersonReadResponsePayload).collect(Collectors.toList());
+        return readUseCase.readAll().stream().map(mapper::toPersonReadResponsePayload).toList();
     }
 
     @GetMapping("{id}")

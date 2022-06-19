@@ -1,5 +1,6 @@
 package poc.test.domain.usecase.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poc.test.domain.Person;
@@ -7,7 +8,6 @@ import poc.test.domain.ReadPersonData;
 import poc.test.domain.usecase.ReadPersonUseCase;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -17,10 +17,7 @@ class ReadPersonUseCaseImpl implements ReadPersonUseCase {
     private final ReadPersonData readPersonData;
 
     @Override
-    public Person readById(UUID id) {
-        if (Objects.isNull(id)) {
-            throw new IllegalArgumentException("person id cannot be null");
-        }
+    public Person readById(@NonNull UUID id) {
         return readPersonData.findById(id);
     }
 

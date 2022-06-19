@@ -2,13 +2,12 @@ package poc.test.domain.usecase.impl;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import poc.test.domain.CreatePersonData;
 import poc.test.domain.Person;
+import poc.test.domain.PersonToCreate;
 
 import java.util.UUID;
 
@@ -30,52 +29,33 @@ class CreatePersonUseCaseImplTest {
     CreatePersonUseCaseImpl service;
 
     @Test
-    void create_personObjectValidation() {
-        assertThatThrownBy(() -> service.create(null))
+    void create_validateFirstNameAndLastNameAreNotEmpty() {
+        var emptyFirstName = new PersonToCreate("", "lastName");
+        assertThatThrownBy(() -> service.create(emptyFirstName))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("person object cannot be null");
+                .hasMessage("first name cannot be empty");
 
-        verifyNoInteractions(data);
-    }
-
-    @NullAndEmptySource
-    @ParameterizedTest(name = "create_firstNameValidation - {argumentsWithNames}")
-    void create_firstNameValidation(String firstName) {
-        var person = Person.builder().firstName(firstName).build();
-        assertThatThrownBy(() -> service.create(person))
+        var emptyLastName = new PersonToCreate("firstName", "");
+        assertThatThrownBy(() -> service.create(emptyLastName))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("first name cannot be blank");
-
-        verifyNoInteractions(data);
-    }
-
-    @NullAndEmptySource
-    @ParameterizedTest(name = "create_lastNameValidation - {argumentsWithNames}")
-    void create_lastNameValidation(String lastName) {
-        var person = Person.builder().firstName("firstName").lastName(lastName).build();
-        assertThatThrownBy(() -> service.create(person))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("last name cannot be blank");
+                .hasMessage("last name cannot be empty");
 
         verifyNoInteractions(data);
     }
 
     @Test
     void create() {
-        var person = Person.builder()
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+        var person = new PersonToCreate("firstName", "lastName");
 
-        var expected = person.toBuilder().id(UUID.randomUUID()).build();
-        when(data.insert(any(Person.class)))
+        var expected = new Person(UUID.randomUUID(), "firstName", "lastName");
+        when(data.insert(any(PersonToCreate.class)))
                 .thenReturn(expected);
 
         var actual = service.create(person);
 
         assertEquals(expected, actual);
 
-        verify(data).insert(any(Person.class));
+        verify(data).insert(any(PersonToCreate.class));
         verifyNoMoreInteractions(data);
     }
 

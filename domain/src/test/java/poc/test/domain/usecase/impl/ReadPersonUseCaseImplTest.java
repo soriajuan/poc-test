@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -28,15 +27,6 @@ class ReadPersonUseCaseImplTest {
 
     @InjectMocks
     ReadPersonUseCaseImpl service;
-
-    @Test
-    void readById_paramValidation() {
-        assertThatThrownBy(() -> service.readById(null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("person id cannot be null");
-
-        verifyNoInteractions(data);
-    }
 
     @Test
     void readById_EntityNotFoundException() {
@@ -57,11 +47,7 @@ class ReadPersonUseCaseImplTest {
     void readById() {
         var uuid = UUID.randomUUID();
 
-        var expected = Person.builder()
-                .id(uuid)
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+        var expected = new Person(uuid, "firstName", "lastName");
 
         when(data.findById(any(UUID.class)))
                 .thenReturn(expected);

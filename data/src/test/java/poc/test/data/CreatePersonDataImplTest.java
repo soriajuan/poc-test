@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import poc.test.data.config.LiquibaseITExtension;
 import poc.test.data.config.PostgreSQLITExtension;
-import poc.test.domain.Person;
+import poc.test.domain.PersonToCreate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,18 +24,15 @@ class CreatePersonDataImplTest {
     @Test
     @ExpectedDataSet(value = "create-person/person-created.yml", ignoreCols = "id")
     void insert() {
-        var toInsert = Person.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .build();
+        var toInsert = new PersonToCreate("John", "Doe");
 
         var inserted = createPersonData.insert(toInsert);
 
         assertNotNull(inserted);
-        assertNotNull(inserted.getId());
+        assertNotNull(inserted.id());
 
-        assertEquals(toInsert.getFirstName(), inserted.getFirstName());
-        assertEquals(toInsert.getLastName(), inserted.getLastName());
+        assertEquals(toInsert.firstName(), inserted.firstName());
+        assertEquals(toInsert.lastName(), inserted.lastName());
     }
 
 }

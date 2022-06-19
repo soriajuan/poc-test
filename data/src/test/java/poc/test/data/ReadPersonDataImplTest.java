@@ -25,18 +25,14 @@ class ReadPersonDataImplTest {
     @Autowired
     ReadPersonDataImpl readPersonData;
 
-    Person johnDoe = Person.builder()
-            .id(UUID.fromString("5dcdabc5-6d31-4281-8953-14b2ca3aac6b"))
-            .firstName("John")
-            .lastName("Doe")
-            .build();
+    Person johnDoe = new Person(UUID.fromString("5dcdabc5-6d31-4281-8953-14b2ca3aac6b"), "John", "Doe");
 
     @Test
     @DataSet(value = "read-person/all-persons.yml")
     void findAll() {
         var expected = List.of(
                 johnDoe,
-                Person.builder().id(UUID.fromString("4df83252-0f39-418c-a1b6-5c18ff62c346")).firstName("Jane").lastName("Doe").build()
+                new Person(UUID.fromString("4df83252-0f39-418c-a1b6-5c18ff62c346"), "Jane", "Doe")
         );
         var actual = readPersonData.findAll();
         assertEquals(expected, actual);
@@ -53,7 +49,7 @@ class ReadPersonDataImplTest {
     @Test
     @DataSet(value = "read-person/one-person.yml")
     void findById() {
-        var actual = readPersonData.findById(johnDoe.getId());
+        var actual = readPersonData.findById(johnDoe.id());
         assertEquals(johnDoe, actual);
     }
 

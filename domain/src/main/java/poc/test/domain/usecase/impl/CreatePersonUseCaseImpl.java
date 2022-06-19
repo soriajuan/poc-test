@@ -1,13 +1,12 @@
 package poc.test.domain.usecase.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import poc.test.domain.CreatePersonData;
 import poc.test.domain.Person;
+import poc.test.domain.PersonToCreate;
 import poc.test.domain.usecase.CreatePersonUseCase;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -16,17 +15,16 @@ class CreatePersonUseCaseImpl implements CreatePersonUseCase {
     private final CreatePersonData createPersonData;
 
     @Override
-    public Person create(Person p) {
-        if (Objects.isNull(p)) {
-            throw new IllegalArgumentException("person object cannot be null");
-        }
-        if (StringUtils.isBlank(p.getFirstName())) {
-            throw new IllegalArgumentException("first name cannot be blank");
-        }
-        if (StringUtils.isBlank(p.getLastName())) {
-            throw new IllegalArgumentException("last name cannot be blank");
-        }
+    public Person create(@NonNull PersonToCreate p) {
+        validateFieldNotEmpty(p.firstName(), "first name");
+        validateFieldNotEmpty(p.lastName(), "last name");
         return createPersonData.insert(p);
+    }
+
+    private void validateFieldNotEmpty(@NonNull String field, @NonNull String fieldName) {
+        if (field.isEmpty()) {
+            throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));
+        }
     }
 
 }

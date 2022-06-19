@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import poc.test.domain.EntityNotFoundException;
 import poc.test.domain.Person;
+import poc.test.domain.PersonToCreate;
 import poc.test.domain.usecase.CreatePersonUseCase;
 import poc.test.domain.usecase.ReadPersonUseCase;
 
@@ -34,6 +35,8 @@ class PersonCrudControllerTest {
 
     static final String BASE_URI = "/persons";
 
+    static final Person johnDoePerson = new Person(UUID.fromString("1b80ae86-1522-48ec-ae26-7197f07fb869"), "John", "Doe");
+
     @Autowired
     MockMvc mockMvc;
 
@@ -48,18 +51,15 @@ class PersonCrudControllerTest {
 
     @Test
     void create() throws Exception {
-        when(mapper.toPerson(any(PersonCreateRequestPayload.class)))
+        when(mapper.toPersonToCreate(any(PersonCreateRequestPayload.class)))
                 .thenAnswer(invocation -> {
                     var arg = invocation.getArgument(0, PersonCreateRequestPayload.class);
-                    return Person.builder()
-                            .firstName(arg.getFirstName())
-                            .lastName(arg.getLastName())
-                            .build();
+                    return new PersonToCreate(arg.getFirstName(), arg.getLastName());
                 });
 
         var uuid = UUID.randomUUID();
-        when(createUseCase.create(any(Person.class)))
-                .thenReturn(Person.builder().id(uuid).build());
+        when(createUseCase.create(any(PersonToCreate.class)))
+                .thenReturn(new Person(uuid, null, null));
 
         var resourceFilePath = new ClassPathResource("person-crud-controller-test/createRequestPayload.json", this.getClass().getClassLoader())
                 .getFile().toPath();
@@ -72,27 +72,23 @@ class PersonCrudControllerTest {
                 .andExpect(header().string(HttpHeaders.LOCATION, "/persons/" + uuid))
                 .andReturn();
 
-        verify(mapper).toPerson(any(PersonCreateRequestPayload.class));
-        verify(createUseCase).create(any(Person.class));
+        verify(mapper).toPersonToCreate(any(PersonCreateRequestPayload.class));
+        verify(createUseCase).create(any(PersonToCreate.class));
         verifyNoMoreInteractions(mapper, createUseCase);
     }
 
     @Test
     void readAll() throws Exception {
         when(readUseCase.readAll())
-                .thenReturn(List.of(Person.builder()
-                        .id(UUID.fromString("1b80ae86-1522-48ec-ae26-7197f07fb869"))
-                        .firstName("John")
-                        .lastName("Doe")
-                        .build()));
+                .thenReturn(List.of(johnDoePerson));
 
         when(mapper.toPersonReadResponsePayload(any(Person.class)))
                 .thenAnswer(invocation -> {
                     var arg = invocation.getArgument(0, Person.class);
                     var res = new PersonReadResponsePayload();
-                    res.setId(arg.getId());
-                    res.setFirstName(arg.getFirstName());
-                    res.setLastName(arg.getLastName());
+                    res.setId(arg.id());
+                    res.setFirstName(arg.firstName());
+                    res.setLastName(arg.lastName());
                     return res;
                 });
 
@@ -126,19 +122,15 @@ class PersonCrudControllerTest {
     @Test
     void readById() throws Exception {
         when(readUseCase.readById(any(UUID.class)))
-                .thenReturn(Person.builder()
-                        .id(UUID.fromString("1b80ae86-1522-48ec-ae26-7197f07fb869"))
-                        .firstName("John")
-                        .lastName("Doe")
-                        .build());
+                .thenReturn(johnDoePerson);
 
         when(mapper.toPersonReadResponsePayload(any(Person.class)))
                 .thenAnswer(invocation -> {
                     var arg = invocation.getArgument(0, Person.class);
                     var res = new PersonReadResponsePayload();
-                    res.setId(arg.getId());
-                    res.setFirstName(arg.getFirstName());
-                    res.setLastName(arg.getLastName());
+                    res.setId(arg.id());
+                    res.setFirstName(arg.firstName());
+                    res.setLastName(arg.lastName());
                     return res;
                 });
 

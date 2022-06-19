@@ -1,7 +1,7 @@
 package poc.test.domain;
 
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 public interface CreatePersonData {
-    Person insert(@NonNull Person p);
+    Person insert(@NonNull PersonToCreate p);
 }

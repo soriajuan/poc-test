@@ -3,6 +3,7 @@ package poc.test.rest.person;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import poc.test.domain.Person;
+import poc.test.domain.PersonToCreate;
 
 import java.util.UUID;
 
@@ -13,19 +14,16 @@ class PersonCrudRestMapperTest {
     PersonCrudRestMapper mapper = Mappers.getMapper(PersonCrudRestMapper.class);
 
     @Test
-    void from_PersonCreateRequestPayload_to_Person() {
+    void from_PersonCreateRequestPayload_to_PersonToCreate() {
         var string = "string";
 
         var from = new PersonCreateRequestPayload();
         from.setFirstName(string);
         from.setLastName(string);
 
-        var expected = Person.builder()
-                .firstName(string)
-                .lastName(string)
-                .build();
+        var expected = new PersonToCreate(string, string);
 
-        var actual = mapper.toPerson(from);
+        var actual = mapper.toPersonToCreate(from);
 
         assertEquals(expected, actual);
     }
@@ -35,11 +33,7 @@ class PersonCrudRestMapperTest {
         var uuid = UUID.randomUUID();
         var string = "string";
 
-        var from = Person.builder()
-                .id(uuid)
-                .firstName(string)
-                .lastName(string)
-                .build();
+        var from = new Person(uuid, string, string);
 
         var expected = new PersonReadResponsePayload();
         expected.setId(uuid);
