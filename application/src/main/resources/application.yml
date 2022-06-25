@@ -1,0 +1,19 @@
+spring:
+
+  # data source
+  datasource:
+    url: jdbc:postgresql://localhost:5432/my_db
+    username: my_user
+    password: my_user
+
+  # jpa
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: poc
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+
+  # liquibase
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.groovy
