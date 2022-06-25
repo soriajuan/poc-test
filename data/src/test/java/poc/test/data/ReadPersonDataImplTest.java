@@ -3,11 +3,9 @@ package poc.test.data;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import poc.test.data.config.LiquibaseITExtension;
-import poc.test.data.config.PostgreSQLITExtension;
+import poc.test.data.config.SingletonPostgresContainer;
 import poc.test.domain.EntityNotFoundException;
 import poc.test.domain.Person;
 
@@ -19,8 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DBRider
 @SpringBootTest
-@ExtendWith({PostgreSQLITExtension.class, LiquibaseITExtension.class})
-class ReadPersonDataImplTest {
+class ReadPersonDataImplTest extends SingletonPostgresContainer {
 
     @Autowired
     ReadPersonDataImpl readPersonData;
