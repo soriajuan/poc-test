@@ -1,0 +1,11 @@
+customer:
+  - id: "this-should-be-ignored-for-test-assertion"
+    name: "Customer A"
+  - id: "e1c95e7c-5604-43db-9bf3-7819c3e458b4"
+    name: "Customer B"
+
+order:
+  - id: "9dab950d-71b3-4f86-938d-705563055238"
+    customer_id: "this-should-be-ignored-for-test-assertion"
+    description: "description"
+    total: 10

@@ -1,0 +1,9 @@
+customer:
+  - id: "this-should-be-ignored-for-test-assertion"
+    name: "Customer A"
+
+order:
+  - id: "this-should-be-ignored-for-test-assertion"
+    customer_id: "this-should-be-ignored-for-test-assertion"
+    description: "description A"
+    total: 10

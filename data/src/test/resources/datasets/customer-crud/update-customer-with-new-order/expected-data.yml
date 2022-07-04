@@ -1,0 +1,9 @@
+customer:
+  - id: "1f24bc70-fe99-4d46-95ae-f6b8232cb47d"
+    name: "Customer A - updated"
+
+order:
+  - id: "this-should-be-ignored-for-the-test"
+    customer_id: "1f24bc70-fe99-4d46-95ae-f6b8232cb47d"
+    description: "description A"
+    total: 10

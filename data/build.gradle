@@ -1,19 +1,16 @@
 plugins {
-    id 'buildsrc.public-repositories'
     id 'buildsrc.java'
+    id 'buildsrc.public-repositories'
     id 'buildsrc.spring-dependency-management'
     id 'buildsrc.testcontainers-dependency-management'
+    id 'buildsrc.mapstruct'
+    id 'buildsrc.lombok-mapstruct-binding'
+    id 'buildsrc.lombok'
+    id 'buildsrc.test-task-config'
 }
 
 dependencies {
     implementation project(':domain')
-
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-
-    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.1.0'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.postgresql:postgresql'
@@ -24,11 +21,4 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'com.github.database-rider:rider-spring:1.32.0'
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "PASSED", "SKIPPED", "FAILED"
-    }
 }

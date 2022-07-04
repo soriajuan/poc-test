@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import poc.test.domain.usecase.CreatePersonUseCase;
-import poc.test.domain.usecase.ReadPersonUseCase;
+import poc.test.domain.services.PersonCrudUseCase;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -22,24 +21,23 @@ import java.util.UUID;
 class PersonCrudController {
 
     private final PersonCrudRestMapper mapper;
-    private final CreatePersonUseCase createUseCase;
-    private final ReadPersonUseCase readUseCase;
+    private final PersonCrudUseCase personCrudUseCase;
 
     @PostMapping
     ResponseEntity<Void> create(@RequestBody @Valid PersonCreateRequestPayload payload) {
         var toCreate = mapper.toPersonToCreate(payload);
-        var created = createUseCase.create(toCreate);
+        var created = personCrudUseCase.create(toCreate);
         return ResponseEntity.created(URI.create("/persons/" + created.id())).build();
     }
 
     @GetMapping
     List<PersonReadResponsePayload> readAll() {
-        return readUseCase.readAll().stream().map(mapper::toPersonReadResponsePayload).toList();
+        return personCrudUseCase.readAll().stream().map(mapper::toPersonReadResponsePayload).toList();
     }
 
     @GetMapping("{id}")
     PersonReadResponsePayload readById(@PathVariable(value = "id") UUID id) {
-        var person = readUseCase.readById(id);
+        var person = personCrudUseCase.readById(id);
         return mapper.toPersonReadResponsePayload(person);
     }
 

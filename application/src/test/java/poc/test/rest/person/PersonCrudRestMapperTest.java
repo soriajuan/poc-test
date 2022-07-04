@@ -2,8 +2,8 @@ package poc.test.rest.person;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import poc.test.domain.Person;
-import poc.test.domain.PersonToCreate;
+import poc.test.domain.entities.Person;
+import poc.test.domain.entities.PersonToCreate;
 
 import java.util.UUID;
 

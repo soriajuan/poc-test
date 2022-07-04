@@ -1,0 +1,9 @@
+customer:
+  - id: "1f24bc70-fe99-4d46-95ae-f6b8232cb47d"
+    name: "Customer A"
+
+order:
+  - id: "daab24a1-a9ea-454d-a5a9-6bff557bcbc1"
+    customer_id: "1f24bc70-fe99-4d46-95ae-f6b8232cb47d"
+    description: "description A"
+    total: 10

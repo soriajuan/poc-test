@@ -3,7 +3,7 @@ package poc.test.rest.config;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import poc.test.domain.EntityNotFoundException;
+import poc.test.domain.exceptions.EntityNotFoundException;
 
 @RestControllerAdvice
 class RestErrorHandler {

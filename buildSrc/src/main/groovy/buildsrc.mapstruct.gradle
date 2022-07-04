@@ -1,0 +1,8 @@
+ext {
+    mapStructVersion = '1.5.2.Final'
+}
+
+dependencies {
+    implementation "org.mapstruct:mapstruct:${mapStructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+}

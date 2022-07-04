@@ -1,23 +1,15 @@
 plugins {
-    id 'buildsrc.public-repositories'
     id 'buildsrc.java'
+    id 'buildsrc.public-repositories'
     id 'buildsrc.spring-dependency-management'
+    id 'buildsrc.lombok'
+    id 'buildsrc.test-task-config'
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-
     implementation 'org.springframework:spring-context'
     implementation 'org.apache.commons:commons-lang3'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.assertj:assertj-core'
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "PASSED", "SKIPPED", "FAILED"
-    }
 }

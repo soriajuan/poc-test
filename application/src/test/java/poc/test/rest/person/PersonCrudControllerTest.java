@@ -9,11 +9,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import poc.test.domain.EntityNotFoundException;
-import poc.test.domain.Person;
-import poc.test.domain.PersonToCreate;
-import poc.test.domain.usecase.CreatePersonUseCase;
-import poc.test.domain.usecase.ReadPersonUseCase;
+import poc.test.domain.entities.Person;
+import poc.test.domain.entities.PersonToCreate;
+import poc.test.domain.exceptions.EntityNotFoundException;
+import poc.test.domain.services.PersonCrudUseCase;
 
 import java.nio.file.Files;
 import java.util.List;
@@ -44,10 +43,7 @@ class PersonCrudControllerTest {
     PersonCrudRestMapper mapper;
 
     @MockBean
-    CreatePersonUseCase createUseCase;
-
-    @MockBean
-    ReadPersonUseCase readUseCase;
+    PersonCrudUseCase personCrudUseCase;
 
     @Test
     void create() throws Exception {
@@ -58,8 +54,8 @@ class PersonCrudControllerTest {
                 });
 
         var uuid = UUID.randomUUID();
-        when(createUseCase.create(any(PersonToCreate.class)))
-                .thenReturn(new Person(uuid, null, null));
+        when(personCrudUseCase.create(any(PersonToCreate.class)))
+                .thenReturn(new Person(uuid, "John", "Doe"));
 
         var resourceFilePath = new ClassPathResource("person-crud-controller-test/createRequestPayload.json", this.getClass().getClassLoader())
                 .getFile().toPath();
@@ -73,13 +69,13 @@ class PersonCrudControllerTest {
                 .andReturn();
 
         verify(mapper).toPersonToCreate(any(PersonCreateRequestPayload.class));
-        verify(createUseCase).create(any(PersonToCreate.class));
-        verifyNoMoreInteractions(mapper, createUseCase);
+        verify(personCrudUseCase).create(any(PersonToCreate.class));
+        verifyNoMoreInteractions(mapper, personCrudUseCase);
     }
 
     @Test
     void readAll() throws Exception {
-        when(readUseCase.readAll())
+        when(personCrudUseCase.readAll())
                 .thenReturn(List.of(johnDoePerson));
 
         when(mapper.toPersonReadResponsePayload(any(Person.class)))
@@ -101,27 +97,27 @@ class PersonCrudControllerTest {
 
         Approvals.verify(responseBody);
 
-        verify(readUseCase).readAll();
+        verify(personCrudUseCase).readAll();
         verify(mapper).toPersonReadResponsePayload(any(Person.class));
-        verifyNoMoreInteractions(readUseCase, mapper);
+        verifyNoMoreInteractions(personCrudUseCase, mapper);
     }
 
     @Test
     void readById_notFound() throws Exception {
-        when(readUseCase.readById(any(UUID.class)))
+        when(personCrudUseCase.readById(any(UUID.class)))
                 .thenThrow(new EntityNotFoundException("entity person not found under id " + returnsFirstArg()));
 
         mockMvc.perform(get(BASE_URI + "/{id}", UUID.randomUUID()))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        verify(readUseCase).readById(any(UUID.class));
+        verify(personCrudUseCase).readById(any(UUID.class));
         verifyNoInteractions(mapper);
     }
 
     @Test
     void readById() throws Exception {
-        when(readUseCase.readById(any(UUID.class)))
+        when(personCrudUseCase.readById(any(UUID.class)))
                 .thenReturn(johnDoePerson);
 
         when(mapper.toPersonReadResponsePayload(any(Person.class)))
@@ -143,7 +139,7 @@ class PersonCrudControllerTest {
 
         Approvals.verify(responseBody);
 
-        verify(readUseCase).readById(any(UUID.class));
+        verify(personCrudUseCase).readById(any(UUID.class));
         verify(mapper).toPersonReadResponsePayload(any(Person.class));
     }
 

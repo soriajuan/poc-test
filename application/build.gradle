@@ -1,8 +1,12 @@
 plugins {
-    id 'buildsrc.public-repositories'
     id 'buildsrc.java'
-    id 'buildsrc.spring-dependency-management'
+    id 'buildsrc.public-repositories'
     id 'org.springframework.boot'
+    id 'buildsrc.spring-dependency-management'
+    id 'buildsrc.mapstruct'
+    id 'buildsrc.lombok-mapstruct-binding'
+    id 'buildsrc.lombok'
+    id 'buildsrc.test-task-config'
 }
 
 group = 'poc-test'
@@ -14,23 +18,10 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.1.0'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.approvaltests:approvaltests:15.4.0'
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "PASSED", "SKIPPED", "FAILED"
-    }
 }

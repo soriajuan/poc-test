@@ -23,12 +23,10 @@ public abstract class SingletonPostgresContainer {
 
     private static final DockerComposeContainer<?> dockerComposeContainer =
             new DockerComposeContainer<>(new File("src/test/resources/docker/docker-compose.yml"))
-                    .withExposedService(SERVICE_NAME, SERVICE_PORT);
+                    .withExposedService(SERVICE_NAME, SERVICE_PORT)
+                    .withRemoveImages(DockerComposeContainer.RemoveImages.ALL);
 
     static {
-        var f = new File("docker/postgres-test-compose.yml");
-        System.out.println("juan exists: " + f.exists());
-        System.out.println("juan path: " + f.getAbsolutePath());
         dockerComposeContainer.start();
 
         JDBC_URL = String.format("jdbc:postgresql://%s:%d/my_db",
